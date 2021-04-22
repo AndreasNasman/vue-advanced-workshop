@@ -1,9 +1,52 @@
 <script>
-  function observe(obj) {
-    // Implement this!
+  class Dep {
+    constructor() {
+      this.subscribers = new Set();
+    }
+
+    depend() {
+      if (activeUpdate) {
+        this.subscribers.add(activeUpdate);
+      }
+    }
+
+    notify() {
+      for (const subscriber of this.subscribers) {
+        subscriber();
+      }
+    }
   }
 
+  function observe(obj) {
+    for (const [key, value] of Object.entries(obj)) {
+      let internalValue = value;
+      const dep = new Dep();
+
+      Object.defineProperty(obj, key, {
+        get() {
+          dep.depend();
+          return internalValue;
+        },
+        set(newValue) {
+          const changed = internalValue !== newValue;
+          internalValue = newValue;
+
+          if (changed) {
+            dep.notify();
+          }
+        },
+      });
+    }
+  }
+
+  let activeUpdate = null;
+
   function autorun(update) {
-    // Implement this!
+    const wrappedUpdate = () => {
+      activeUpdate = wrappedUpdate;
+      update();
+      activeUpdate = null;
+    };
+    wrappedUpdate();
   }
 </script>
