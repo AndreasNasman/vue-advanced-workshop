@@ -5,27 +5,27 @@
 </div>
 
 <script>
-// mock API
-function fetchURL (username, cb) {
-  setTimeout(() => {
-    // hard coded, bonus: exercise: make it fetch from gravatar!
-    cb('https://avatars3.githubusercontent.com/u/6128107?v=4&s=200')
-  }, 500)
-}
+  // mock API
+  function fetchURL(username, cb) {
+    setTimeout(() => {
+      // hard coded, bonus: exercise: make it fetch from gravatar!
+      cb("https://avatars3.githubusercontent.com/u/6128107?v=4&s=200");
+    }, 500);
+  }
 
-const Avatar = {
-  props: ['src'],
-  template: `<img :src="src">`
-}
+  const Avatar = {
+    props: ["src"],
+    template: `<img :src="src">`,
+  };
 
-function withAvatarURL (InnerComponent) {
-  // Implement this!
-}
+  function withAvatarURL(InnerComponent) {
+    // Implement this!
+  }
 
-const SmartAvatar = withAvatarURL(Avatar)
+  const SmartAvatar = withAvatarURL(Avatar);
 
-new Vue({
-  el: '#app',
-  components: { SmartAvatar }
-})
+  new Vue({
+    el: "#app",
+    components: { SmartAvatar },
+  });
 </script>

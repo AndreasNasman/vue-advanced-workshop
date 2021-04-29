@@ -1,18 +1,18 @@
-require('../../util').createTestCase(__filename, (window, logs, done) => {
-  expect(window.document.getElementById('app').innerHTML).toMatch(
+require("../../util").createTestCase(__filename, (window, logs, done) => {
+  expect(window.document.getElementById("app").innerHTML).toMatch(
     `<div>foo</div>`
-  )
-  window.$click('button')
+  );
+  window.$click("button");
   setTimeout(() => {
-    expect(window.document.getElementById('app').innerHTML).toMatch(
+    expect(window.document.getElementById("app").innerHTML).toMatch(
       `<div>bar</div>`
-    )
-    window.$click('button')
+    );
+    window.$click("button");
     setTimeout(() => {
-      expect(window.document.getElementById('app').innerHTML).toMatch(
-       `<div>foo</div>`
-      )
-      done()
-    }, 0)
-  }, 0)
-})
+      expect(window.document.getElementById("app").innerHTML).toMatch(
+        `<div>foo</div>`
+      );
+      done();
+    }, 0);
+  }, 0);
+});
