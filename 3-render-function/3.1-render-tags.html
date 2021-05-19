@@ -6,7 +6,13 @@
 
 <script>
   Vue.component("example", {
-    // Implement this!
+    props: ["tags"],
+    render(h) {
+      return h(
+        "div",
+        this.tags.map((tag, index) => h(tag, index))
+      );
+    },
   });
 
   new Vue({ el: "#app" });
