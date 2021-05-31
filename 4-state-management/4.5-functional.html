@@ -4,7 +4,27 @@
 
 <script>
   function createApp({ el, model, view, actions }) {
-    // Implement this!
+    const wrappedActions = Object.entries(actions).reduce(
+      (accumulator, action) => {
+        const [name, func] = action;
+        accumulator[name] = () => {
+          const nextModel = func(vm.model);
+          vm.model = nextModel;
+        };
+        return accumulator;
+      },
+      {}
+    );
+
+    const vm = new Vue({
+      el,
+      data: {
+        model,
+      },
+      render(h) {
+        return view(h, this.model, wrappedActions);
+      },
+    });
   }
 
   // voila
