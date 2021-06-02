@@ -16,12 +16,44 @@
 
 <script>
   const validationPlugin = {
-    // Implement this!
+    install(Vue) {
+      Vue.mixin({
+        beforeCreate() {
+          const rules = this.$options.validations;
+          if (rules) {
+            this.$options.computed = {
+              ...this.$options.computed,
+              ...{
+                $v() {
+                  let valid = true;
+                  const errors = [];
+
+                  Object.entries(rules).forEach(([key, rule]) => {
+                    const value = this[key];
+                    const result = rule.validate(value);
+                    if (!result) {
+                      valid = false;
+                      errors.push(rule.message(key, value));
+                    }
+                  });
+
+                  return {
+                    errors,
+                    valid,
+                  };
+                },
+              },
+            };
+          }
+        },
+      });
+    },
   };
 
   Vue.use(validationPlugin);
 
-  const emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const emailRE =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   new Vue({
     el: "#app",
