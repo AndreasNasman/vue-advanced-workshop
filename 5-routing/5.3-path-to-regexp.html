@@ -23,11 +23,26 @@
   const NotFound = { template: `<div>not found!</div>` };
 
   const routeTable = {
-    // Implement this!
+    "/bar": Bar,
+    "/foo/:id": Foo,
   };
 
+  const compiledRoutes = Object.entries(routeTable).reduce(
+    (routes, [path, component]) => {
+      const dynamicSegments = [];
+      const regex = pathToRegexp(path, dynamicSegments);
+      routes.push({
+        component,
+        dynamicSegments,
+        regex,
+      });
+      return routes;
+    },
+    []
+  );
+
   window.addEventListener("hashchange", () => {
-    // Implement this!
+    app.url = window.location.hash.slice(1);
   });
 
   const app = new Vue({
@@ -41,13 +56,22 @@
       let componentToRender;
       let props = {};
 
-      // Implement the logic to figure out proper values
-      // for componentToRender and props
+      compiledRoutes.some((route) => {
+        const match = route.regex.exec(path);
+        if (match) {
+          componentToRender = route.component;
+          route.dynamicSegments.forEach((segment, index) => {
+            props[segment.name] = match[index + 1];
+          });
+          return true;
+        }
+      });
 
-      return h("div", [
-        h(componentToRender, { props }),
-        h("a", { attrs: { href: "#foo/123" } }, "foo"),
-        h("a", { attrs: { href: "#foo/234" } }, "foo"),
+      return h("div", { attrs: { id: "app" } }, [
+        h(componentToRender || NotFound, { props }),
+        h("a", { attrs: { href: "#foo/123" } }, "foo 123"),
+        " | ",
+        h("a", { attrs: { href: "#foo/234" } }, "foo 234"),
         " | ",
         h("a", { attrs: { href: "#bar" } }, "bar"),
       ]);
