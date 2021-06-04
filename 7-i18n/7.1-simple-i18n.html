@@ -9,7 +9,11 @@
 
 <script>
   const i18nPlugin = {
-    // Implement this!
+    install(Vue, locales) {
+      Vue.prototype.$t = function (id) {
+        return locales[this.$root.lang][id];
+      };
+    },
   };
 
   Vue.use(
